@@ -1,87 +1,243 @@
 import React from 'react'
-import {Text, View, StyleSheet, SafeAreaView, ScrollView, Image} from "react-native"
+import { Text, View, StyleSheet, SafeAreaView, ScrollView, Image, TextInput, TouchableOpacity } from "react-native"
 import COLORS from "../const/colors"
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import logo from '../../assets/logo/symbian.png'
+import AppLoading from 'expo-app-loading';
+import {
+    useFonts,
+    BreeSerif_400Regular,
+} from '@expo-google-fonts/bree-serif'
+import { Formik } from 'formik'
+import fonts from '../const/fonts'
 
-const Sign = () =>{
+import Header from '../components/Header'
+import Input from '../components/Input'
+import NegativeButoon from '../components/NegativeButton'
+import PositiveButoon from '../components/PositiveButton'
 
-    return(
+const Sign = () => {
 
-        <SafeAreaView>
+    // const [inputs, setInputs] = React.useState({
 
-            <ScrollView>
+    // nome_paciente: '',
+    // telefone_paciente: '',
+    // celular_paciente: '',
+    // email_paciente: '',
+    // nome_responsavel: '',
+    // telefone_responsavel: ''
 
-                <View style={styles.header}>
+    //   })
 
-                    <View style={styles.back}>
-                    
-                        <Icon style={styles.backIcon} name={'keyboard-backspace'}/>
+    //   const handlerOnChange = (text, input) =>{
 
-                        <Text style={styles.backText}>Voltar</Text>
+    //     console.log(text)
 
-                    </View>
+    //     setInputs((prevState) =>(
 
-                    
-                    <View style={styles.containerLogo}>
+    //       {...prevState, [input]:text} 
 
-                        <Image source={logo}/>
+    //     ));
 
-                    </View>
+    //     console.log(inputs)
+    //   }
 
-                </View>
+    // const [errors, setErrors] = React.useState({});
 
-                <View>
+    // const handlerErrors = (errorMesage, input)=>{
+
+    //  setErrors((prevState) => ({...prevState, [input]:errorMesage}));
+
+    // }
+
+    // const validate = () =>{
+
+    //     let result = true
+
+    //     if(!inputs.nome_paciente){
+
+    //         result = false
+    //         handlerErrors('Informe o nome do paciente', 'nome_paciente')
+
+    //     } else if(!inputs.telefone_paciente){
+
+    //         result = false
+    //         handlerErrors('Informe o telefone do paciente', 'telefone_paciente')
+
+    //     }else if(!inputs.celular_paciente){
+
+    //         result = false
+    //         handlerErrors('Informe o celular do paciente', 'celular_paciente')
+
+    //     }else if(!inputs.email_paciente){
+
+    //         result = false
+    //         handlerErrors('Informe o email do paciente', 'email_paciente')
+    //     }
+    // }
+
+    let [fontsLoaded] = useFonts({
+        BreeSerif_400Regular,
+    });
+
+    if (!fontsLoaded) {
+        return (
+            <SafeAreaView style={styles.loadingContainer} >
+                <Text style={styles.loading}>...Carregando</Text>
+            </SafeAreaView>
+        )
+    } else {
+
+        return (
+
+            <SafeAreaView>
+
+                <ScrollView>
+
+                    <Header />
 
                     <View>
 
-                        <Text>Dados do paciente:</Text>
-                        
+                        <Formik
+
+                            initialValues={{
+                                nome_paciente: '',
+                                telefone_paciente: '',
+                                celular_paciente: '',
+                                email_paciente: '',
+                                nome_responsavel: '',
+                                telefone_responsavel: ''
+                            }}
+
+                            onSubmit={(values) => {
+
+                            }}
+                        >
+
+                            {({ props }) => (
+                                <>
+                                    <View >
+
+                                        <Text style={styles.formTitle}>Dados do paciente:</Text>
+
+                                        <View style={styles.inputsContainer}>
+
+                                            <Input
+                                                placeholder={'Nome'}
+                                                iconName={'card-account-details'}
+                                                onChangeText={(text) => { handlerOnChange(text, 'nome_paciente') }}
+                                                error={errors.nome_paciente}
+                                                onFocus={() => { handlerErrors(null, 'nome_paciente') }}
+                                            />
+                                            <Input
+                                                placeholder={'Telefone'}
+                                                iconName={'phone'}
+                                                onChangeText={(text) => { handlerOnChange(text, 'telefone_paciente') }}
+                                                error={errors.telefone_paciente}
+                                                onFocus={() => { handlerErrors(null, 'telefone_paciente') }}
+                                            />
+                                            <Input
+                                                placeholder={'Celular'}
+                                                iconName={'cellphone'}
+                                                onChangeText={(text) => { handlerOnChange(text, 'celular_paciente') }}
+                                                error={errors.celular_paciente}
+                                                onFocus={() => { handlerErrors(null, 'celular_paciente') }}
+                                            />
+                                            <Input
+                                                placeholder={'Email'}
+                                                iconName={'email'}
+                                                onChangeText={(text) => { handlerOnChange(text, 'email_paciente') }}
+                                                error={errors.email_paciente}
+                                                onFocus={() => { handlerErrors(null, 'email_paciente') }}
+                                            />
+
+                                        </View>
+
+                                    </View>
+
+                                    <View >
+
+                                        <Text style={styles.formTitle}>Dados do responsável:</Text>
+
+                                        <View style={styles.inputsContainer}>
+
+                                            <Input
+                                                placeholder={'Nome'}
+                                                iconName={'card-account-details'}
+                                                onChangeText={(text) => { handlerOnChange(text, 'nome_responsavel') }}
+                                            />
+                                            <Input
+                                                placeholder={'Telefone'}
+                                                iconName={'phone'}
+                                                onChangeText={(text) => { handlerOnChange(text, 'telefone_responsavel') }}
+                                            />
+                                        </View>
+
+                                    </View>
+                                </>
+
+                            )}
+
+
+
+
+                        </Formik>
+
+
+
+                        <View style={styles.buttonsContainer}>
+
+                            <NegativeButoon text={'Cancelar'} />
+                            <PositiveButoon text={'Salvar'} onPress={validate} />
+
+                        </View>
+
                     </View>
 
-                </View>
+                </ScrollView>
 
-            </ScrollView>
-
-        </SafeAreaView>
-    )
+            </SafeAreaView>
+        )
+    }
 }
 
 const styles = StyleSheet.create({
 
-    header:{
-        marginTop: 32,
-        width: 440,
-        height: 90,
-        // backgroundColor: COLORS.blue,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center'
+    generalContainer: {
+
+        fontFamily: fonts.bree
     },
-    back:{
-        width: 100,
-        height: 60,
+    inputsContainer: {
         display: 'flex',
-        flexDirection: 'row',
-        // backgroundColor: COLORS.gray,
+        justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 12,
+        marginBottom: 50
     },
-    backIcon:{
-        fontSize: 24,
-        color: COLORS.black,
-        marginLeft: 22
+    formTitle: {
+        fontSize: 20,
+        marginTop: 10,
+        marginLeft: 22,
+        fontFamily: fonts.bree
+
     },
-    backText:{
-        fontSize: 18,
-        color: COLORS.black,
-        marginLeft: 8
+    buttonsContainer: {
+        // backgroundColor:COLORS.gray,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
     },
-    containerLogo:{
-        width: 360,
-        // backgroundColor: COLORS.darkBlue,
-        paddingLeft: 64,
-        paddingTop: 10
+    loading: {
+
+        fontSize: 24
+    },
+    loadingContainer: {
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
-}) 
+})
 
 export default Sign
