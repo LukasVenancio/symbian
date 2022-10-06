@@ -1,14 +1,11 @@
 import React from 'react'
-import { Text, View, StyleSheet, SafeAreaView, ScrollView, Image, TextInput, TouchableOpacity } from "react-native"
-import COLORS from "../const/colors"
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import logo from '../../assets/logo/symbian.png'
-import AppLoading from 'expo-app-loading';
+import { Text, View, StyleSheet, SafeAreaView, ScrollView} from "react-native"
 import {
     useFonts,
     BreeSerif_400Regular,
 } from '@expo-google-fonts/bree-serif'
 import { Formik } from 'formik'
+import  *  as yup from 'yup'
 import fonts from '../const/fonts'
 
 import Header from '../components/Header'
@@ -17,64 +14,16 @@ import NegativeButoon from '../components/NegativeButton'
 import PositiveButoon from '../components/PositiveButton'
 
 const Sign = () => {
+    
+    const validateSchema = yup.object({
+        nome_paciente: yup.string().required('Insira um nome válido').min(4, 'Insira um nome válido'),
+        telefone_paciente: yup.string().required('Telefone obrigatório').min(8, 'Insira um telefone válido'),
+        celular_paciente: yup.string().required('Celular obrigatório').min(8, 'Insira um celular válido'),
+        email_paciente: yup.string().required('Email obrigatório').min(8, 'Insira um email válido').email('Insira um email válido'),
+        nome_responsavel: yup.string().min(4, 'Insira um nome válido'),
+        telefone_responsavel: yup.string().min(8, 'Insira um telefone válido'),
 
-    // const [inputs, setInputs] = React.useState({
-
-    // nome_paciente: '',
-    // telefone_paciente: '',
-    // celular_paciente: '',
-    // email_paciente: '',
-    // nome_responsavel: '',
-    // telefone_responsavel: ''
-
-    //   })
-
-    //   const handlerOnChange = (text, input) =>{
-
-    //     console.log(text)
-
-    //     setInputs((prevState) =>(
-
-    //       {...prevState, [input]:text} 
-
-    //     ));
-
-    //     console.log(inputs)
-    //   }
-
-    // const [errors, setErrors] = React.useState({});
-
-    // const handlerErrors = (errorMesage, input)=>{
-
-    //  setErrors((prevState) => ({...prevState, [input]:errorMesage}));
-
-    // }
-
-    // const validate = () =>{
-
-    //     let result = true
-
-    //     if(!inputs.nome_paciente){
-
-    //         result = false
-    //         handlerErrors('Informe o nome do paciente', 'nome_paciente')
-
-    //     } else if(!inputs.telefone_paciente){
-
-    //         result = false
-    //         handlerErrors('Informe o telefone do paciente', 'telefone_paciente')
-
-    //     }else if(!inputs.celular_paciente){
-
-    //         result = false
-    //         handlerErrors('Informe o celular do paciente', 'celular_paciente')
-
-    //     }else if(!inputs.email_paciente){
-
-    //         result = false
-    //         handlerErrors('Informe o email do paciente', 'email_paciente')
-    //     }
-    // }
+    })
 
     let [fontsLoaded] = useFonts({
         BreeSerif_400Regular,
@@ -109,12 +58,17 @@ const Sign = () => {
                                 telefone_responsavel: ''
                             }}
 
+                            validationSchema={validateSchema}
+
                             onSubmit={(values) => {
+
+                                console.log(values)
+                                
 
                             }}
                         >
 
-                            {({ props }) => (
+                            {( {handleChange, values, handleSubmit, errors, touched} ) => (
                                 <>
                                     <View >
 
@@ -125,30 +79,31 @@ const Sign = () => {
                                             <Input
                                                 placeholder={'Nome'}
                                                 iconName={'card-account-details'}
-                                                onChangeText={(text) => { handlerOnChange(text, 'nome_paciente') }}
+                                                onChangeText={handleChange('nome_paciente')}
+                                                value={values.nome_paciente}
                                                 error={errors.nome_paciente}
-                                                onFocus={() => { handlerErrors(null, 'nome_paciente') }}
+                                                touched={touched}
                                             />
                                             <Input
                                                 placeholder={'Telefone'}
                                                 iconName={'phone'}
-                                                onChangeText={(text) => { handlerOnChange(text, 'telefone_paciente') }}
+                                                onChangeText={handleChange('telefone_paciente')}
+                                                value={values.telefone_paciente}
                                                 error={errors.telefone_paciente}
-                                                onFocus={() => { handlerErrors(null, 'telefone_paciente') }}
                                             />
                                             <Input
                                                 placeholder={'Celular'}
                                                 iconName={'cellphone'}
-                                                onChangeText={(text) => { handlerOnChange(text, 'celular_paciente') }}
+                                                onChangeText={handleChange('celular_paciente')}
+                                                value={values.celular_paciente}
                                                 error={errors.celular_paciente}
-                                                onFocus={() => { handlerErrors(null, 'celular_paciente') }}
-                                            />
+                                             />
                                             <Input
                                                 placeholder={'Email'}
                                                 iconName={'email'}
-                                                onChangeText={(text) => { handlerOnChange(text, 'email_paciente') }}
+                                                onChangeText={handleChange('email_paciente')}
+                                                value={values.email_paciente}
                                                 error={errors.email_paciente}
-                                                onFocus={() => { handlerErrors(null, 'email_paciente') }}
                                             />
 
                                         </View>
@@ -164,33 +119,33 @@ const Sign = () => {
                                             <Input
                                                 placeholder={'Nome'}
                                                 iconName={'card-account-details'}
-                                                onChangeText={(text) => { handlerOnChange(text, 'nome_responsavel') }}
+                                                onChangeText={handleChange('nome_responsavel')}
+                                                value={values.nome_responsavel}
+                                                error={errors.nome_responsavel}
                                             />
                                             <Input
                                                 placeholder={'Telefone'}
                                                 iconName={'phone'}
-                                                onChangeText={(text) => { handlerOnChange(text, 'telefone_responsavel') }}
+                                                onChangeText={handleChange('telefone_responsavel')}
+                                                value={values.telefone_responsavel}
+                                                error={errors.telefone_responsavel}
                                             />
                                         </View>
+
+                                    </View>
+
+
+                                    <View style={styles.buttonsContainer}>
+
+                                        <NegativeButoon text={'Cancelar'} />
+                                        <PositiveButoon text={'Salvar'} onPress={handleSubmit}/>
 
                                     </View>
                                 </>
 
                             )}
 
-
-
-
                         </Formik>
-
-
-
-                        <View style={styles.buttonsContainer}>
-
-                            <NegativeButoon text={'Cancelar'} />
-                            <PositiveButoon text={'Salvar'} onPress={validate} />
-
-                        </View>
 
                     </View>
 
