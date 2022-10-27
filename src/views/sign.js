@@ -138,7 +138,7 @@ const Sign = () => {
                                     <View style={styles.buttonsContainer}>
 
                                         <NegativeButoon text={'Cancelar'} />
-                                        <PositiveButoon text={'Salvar'} onPress={handleSubmit}/>
+                                        <PositiveButoon text={'Salvar'} onPress={onsubmit}/>
 
                                     </View>
                                 </>
