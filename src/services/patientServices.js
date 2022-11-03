@@ -7,7 +7,7 @@ export const create = async (data) => {
         const result = await api.post("/patient", data)
 
         return{
-            sucess: result.status == 200,
+            sucess: result.status == 201,
             data: result.data
         }
 

@@ -1,11 +1,11 @@
 import React from 'react'
-import { Text, View, StyleSheet, SafeAreaView, ScrollView} from "react-native"
+import { Text, View, StyleSheet, SafeAreaView, ScrollView } from "react-native"
 import {
     useFonts,
     BreeSerif_400Regular,
 } from '@expo-google-fonts/bree-serif'
 import { Formik } from 'formik'
-import  *  as yup from 'yup'
+import *  as yup from 'yup'
 import fonts from '../const/fonts'
 
 import Header from '../components/Header'
@@ -13,15 +13,17 @@ import Input from '../components/Input'
 import NegativeButoon from '../components/NegativeButton'
 import PositiveButoon from '../components/PositiveButton'
 
+import { create } from '../services/index'
+
 const Sign = () => {
-    
+
     const validateSchema = yup.object({
-        nome_paciente: yup.string().required('Insira um nome válido').min(4, 'Insira um nome válido'),
-        telefone_paciente: yup.string().required('Telefone obrigatório').min(8, 'Insira um telefone válido'),
-        celular_paciente: yup.string().required('Celular obrigatório').min(8, 'Insira um celular válido'),
-        email_paciente: yup.string().required('Email obrigatório').min(8, 'Insira um email válido').email('Insira um email válido'),
-        nome_responsavel: yup.string().min(4, 'Insira um nome válido'),
-        telefone_responsavel: yup.string().min(8, 'Insira um telefone válido'),
+        name: yup.string().required('Insira um nome válido').min(4, 'Insira um nome válido'),
+        phone: yup.string().required('Telefone obrigatório').min(8, 'Insira um telefone válido'),
+        cell_phone: yup.string().required('Celular obrigatório').min(8, 'Insira um celular válido'),
+        email: yup.string().required('Email obrigatório').min(8, 'Insira um email válido').email('Insira um email válido'),
+        responsible_name: yup.string().min(4, 'Insira um nome válido'),
+        responsible_phone: yup.string().min(8, 'Insira um telefone válido'),
 
     })
 
@@ -50,25 +52,26 @@ const Sign = () => {
                         <Formik
 
                             initialValues={{
-                                nome_paciente: '',
-                                telefone_paciente: '',
-                                celular_paciente: '',
-                                email_paciente: '',
-                                nome_responsavel: '',
-                                telefone_responsavel: ''
+                                name: '',
+                                phone: '',
+                                cell_phone: '',
+                                email: '',
+                                responsible_name: '',
+                                responsible_phone: ''
                             }}
 
                             validationSchema={validateSchema}
 
-                            onSubmit={(values) => {
+                            onSubmit={async (values) => {
 
-                                console.log(values)
-                                
+                                const result = await create(values)
+                                console.log(result)
+
 
                             }}
                         >
 
-                            {( {handleChange, values, handleSubmit, errors, touched} ) => (
+                            {({ handleChange, values, handleSubmit, errors, touched }) => (
                                 <>
                                     <View >
 
@@ -79,31 +82,31 @@ const Sign = () => {
                                             <Input
                                                 placeholder={'Nome'}
                                                 iconName={'card-account-details'}
-                                                onChangeText={handleChange('nome_paciente')}
-                                                value={values.nome_paciente}
-                                                error={errors.nome_paciente}
+                                                onChangeText={handleChange('name')}
+                                                value={values.name}
+                                                error={errors.name}
                                                 touched={touched}
                                             />
                                             <Input
                                                 placeholder={'Telefone'}
                                                 iconName={'phone'}
-                                                onChangeText={handleChange('telefone_paciente')}
-                                                value={values.telefone_paciente}
-                                                error={errors.telefone_paciente}
+                                                onChangeText={handleChange('phone')}
+                                                value={values.phone}
+                                                error={errors.phone}
                                             />
                                             <Input
                                                 placeholder={'Celular'}
                                                 iconName={'cellphone'}
-                                                onChangeText={handleChange('celular_paciente')}
-                                                value={values.celular_paciente}
-                                                error={errors.celular_paciente}
-                                             />
+                                                onChangeText={handleChange('cell_phone')}
+                                                value={values.cell_phone}
+                                                error={errors.cell_phone}
+                                            />
                                             <Input
                                                 placeholder={'Email'}
                                                 iconName={'email'}
-                                                onChangeText={handleChange('email_paciente')}
-                                                value={values.email_paciente}
-                                                error={errors.email_paciente}
+                                                onChangeText={handleChange('email')}
+                                                value={values.email}
+                                                error={errors.email}
                                             />
 
                                         </View>
@@ -119,16 +122,16 @@ const Sign = () => {
                                             <Input
                                                 placeholder={'Nome'}
                                                 iconName={'card-account-details'}
-                                                onChangeText={handleChange('nome_responsavel')}
-                                                value={values.nome_responsavel}
-                                                error={errors.nome_responsavel}
+                                                onChangeText={handleChange('responsible_name')}
+                                                value={values.responsible_name}
+                                                error={errors.responsible_name}
                                             />
                                             <Input
                                                 placeholder={'Telefone'}
                                                 iconName={'phone'}
-                                                onChangeText={handleChange('telefone_responsavel')}
-                                                value={values.telefone_responsavel}
-                                                error={errors.telefone_responsavel}
+                                                onChangeText={handleChange('responsible_phone')}
+                                                value={values.responsible_phone}
+                                                error={errors.responsible_phone}
                                             />
                                         </View>
 
@@ -138,7 +141,7 @@ const Sign = () => {
                                     <View style={styles.buttonsContainer}>
 
                                         <NegativeButoon text={'Cancelar'} />
-                                        <PositiveButoon text={'Salvar'} onPress={onsubmit}/>
+                                        <PositiveButoon text={'Salvar'} onPress={() => handleSubmit()} />
 
                                     </View>
                                 </>
