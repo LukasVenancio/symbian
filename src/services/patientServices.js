@@ -18,3 +18,23 @@ export const create = async (data) => {
         }
     }
 }
+
+export const listAll = async () => {
+
+    try{
+
+        const response = await api.get("/patient")
+        const result = response.data
+
+        return{
+            sucess: response.status == 200,
+            data: result
+        }
+
+    }catch (error){
+
+        return{
+            error: error
+        }
+    }
+}

@@ -1,23 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Text, View, StyleSheet, SafeAreaView, ScrollView } from "react-native"
+import Header from '../components/Header'
+import PatientCard from '../components/PatientCard'
+import { listAll } from '../services/index'
 import {
     useFonts,
     BreeSerif_400Regular,
 } from '@expo-google-fonts/bree-serif'
-import { Formik } from 'formik'
-import *  as yup from 'yup'
-import fonts from '../const/fonts'
-
-import Header from '../components/Header'
-import Input from '../components/Input'
-import NegativeButoon from '../components/NegativeButton'
-import PositiveButoon from '../components/PositiveButton'
-import PatientCard from '../components/PatientCard'
 
 const PatientList = () => {
+
+    const [patients, setPatients] = useState([{
+        "id": 0,
+        "name": null,
+        "phone": null,
+        "cell_phone": null,
+        "email": null,
+        "responsible_name": null,
+        "responsible_phone": null
+    }])
+
+    const getPatients = async () => {
+
+        const result = await listAll()
+        setPatients(result.data)
+    }
+
+    useEffect(() => {
+
+        getPatients()
+    },
+        [])
+
     let [fontsLoaded] = useFonts({
         BreeSerif_400Regular,
     });
+
     if (!fontsLoaded) {
         return (
             <SafeAreaView style={styles.loadingContainer} >
@@ -30,27 +48,33 @@ const PatientList = () => {
 
             <SafeAreaView style={styles.safe}>
                 <Header />
-                <View style={styles.cardsContainer}>
-                    <PatientCard />
-                    <PatientCard />
-                    <PatientCard />
-                </View>
+                <ScrollView style={styles.scroll}>
+                    <View style={styles.cardsContainer}>
+                        {patients.map((patient) => {
 
+                            return (
+                                <PatientCard
+                                    name={patient.name}
+                                    phone={patient.phone}
+                                    cellPhone={patient.cell_phone}
+                                    email={patient.email}
+                                    id={patient.id}
+                                />
+                            )
+                        })}
+                    </View>
+                </ScrollView>
             </SafeAreaView>
-
-
-
-
         )
-
     }
 }
+
 const styles = StyleSheet.create({
-    safe:{
-        display:'flex',
-        flexDirection:'column',
-        height:'100%',
-        width:'100%'
+    safe: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        width: '100%'
     },
     loading: {
 
@@ -63,12 +87,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    cardsContainer:{
-        display:'flex',
-        justifyContent:'center',
-        alignItems:'center',
-        flexGrow:1
+    cardsContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexGrow: 1
     }
+
 })
 
 export default PatientList
